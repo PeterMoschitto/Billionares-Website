@@ -1,0 +1,36 @@
+	{% extends "layout.html" %}
+
+	{% set active_page = "nameData" %}
+
+	{% block title %}Billionaires List{% endblock %}
+
+	{% block heading %}Billionaires List{% endblock %}
+
+	{% block body %}
+    
+<h2>Select a year</h2>
+<form action="/nameData">
+  <select name="name">
+    {{ options }}
+  </select>
+  <br><br>
+  <input type="submit">
+</form>
+
+      <!-- 
+  <form action="/showFact">
+          <select name="state"> <!~~ add onchange="this.form.submit()" to submit/update the form when an option is selected.  Usefull for then displaying county options. ~~>
+            {{ state_options }}
+          </select>
+          <br><br>
+          <input type="submit" value="Get a fun fact!">
+        </form>
+        <div id="funFact">
+            <p>{{ funFact }}</p>
+            <p>{{ funFact2 }}</p>
+            <p>{{ funFact3 }}</p>
+            <p>{{ funFact4 }}</p>
+        </div>
+ -->
+
+	{% endblock %}

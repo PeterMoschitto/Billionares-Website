@@ -1,0 +1,17 @@
+	{% extends "layout.html" %}
+
+	{% set active_page = "home" %}
+
+	{% block title %}About the Data{% endblock %}
+
+	{% block heading %}About the Billionaire Data{% endblock %}
+
+	{% block body %}
+    
+    	<p> The data used in this web app is from the CORGIS Dataset Project and can be found <a class="links" href="https://www.piie.com/publications/working-papers/origins-superrich-billionaire-characteristics-database?ResearchID=2917"> here</a>. This data takes all the billionaires from 1996, 2001, and 2014 and provides information about each such as their name, rank in terms of wealth, and information about how they became a billionaire. </p>
+		<br></br>
+		<p> This data-set goes goes further in-depth describing the exact company, sector, and position that each billionaire held in that company along with additional information regarding location and other means of acquiring wealth. One category in this data-set is a "from emerging" category; this category is a boolean (true or false) category that determines whether the billionaire is coming from an emerging market such as China, India, Russia, etc. </p>
+		<br></br>
+		<p> Lastly, one category in this data-set is GDP. GDP is the Gross Domestic Product and it measures the monetary value of final goods and services—that is, those that are bought by the final user—produced in a country in a given period of time (say a quarter or a year). It counts all of the output generated within the borders of a country.</p>
+
+	{% endblock %}

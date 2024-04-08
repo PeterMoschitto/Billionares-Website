@@ -1,0 +1,18 @@
+body {
+	background: blanchedAlmond;
+}
+
+#text {
+	padding: 10px;
+	font-family: Lucida Console;
+}
+
+.container-fluid {
+	background: black;
+	color: white;
+}
+
+.navbar-header {
+	background: black;
+
+}
