@@ -16,136 +16,97 @@ with open('billionaires.json') as billionaires:
 def render_about():
     return render_template('home.html')
     
+    
 @app.route('/nameData')
 def render_nameData():
-#load the data from the JSON file
+	# with open('billionaires.json') as billionaires:
+# 		billionaire_data = json.load(billionaires) 
+# 	name = get_name_options()
+	if "year" in request.args and "name" in request.args:
+		year = request.args['year']
+		name = request.args['name']
+		info = get_info(name, year)
+		return render_template('nameData.html', name_options=get_name_options(), year_options=get_year_options(), name=name, info=info) #I dont think this line is being run
+	return render_template('nameData.html', name_options=get_name_options(), year_options=get_year_options())
+
+
+@app.route('/totalWorth')
+def render_totalWorth():
+	if "name" in request.args:
+		name = request.args['name']
+		return render_template('totalWorth.html', name_options=get_name_options(), name=name, worth=total_worth(name))
+	return render_template('totalWorth.html', name_options=get_name_options())
+    
+    
+def total_worth(name):
+#Returns the total worth of a selected billionaire
 	with open('billionaires.json') as billionaires:
-    	billionaire_data = json.load(billionaires) 
-    	if 'name' in request.args:
-    	name = request.args['name']
-    	return render_template('nameData.html', name=name, options=get_year_options(weeks))
+		billionaire_data = json.load(billionaires) 
+	initial_worth = 0
+	worth = 0
+	worth_difference = 0
+	for w in billionaire_data:
+		if w["name"] == name:
+			initial_worth = w["wealth"]["worth in billions"]
+			worth += w["wealth"]["worth in billions"]
+		worth_difference = worth - initial_worth
+	return name + "'s total worth combining the years 1996, 2001, and 2014 is " + str(worth) + " billion dollars. In 1996 " + name + " was worth " + str(initial_worth) + " billion dollars. This means that " + name + " grew " + str(worth_difference) + " billion dollars."
+	
+	
+	
+	
+def get_year_options():
+#Returns the html code for a drop down menu.  Each option is a year for which there is complete data (1990 and 2016 are missing data)."""
+	with open('billionaires.json') as billionaires:
+		billionaire_data = json.load(billionaires) 
+	years = []
+	for y in billionaire_data:
+		if y["year"] not in years:
+			years.append(y["year"])
+	year_options = ""
+	for year in years:
+		year_options += Markup("<option value=\"" + str(year) + "\">" + str(year) + "</option>")
+	return year_options
 
-def get_year_options(weeks):
-#     Returns the html code for a drop down menu.  Each option is a year for which there is complete data (1990 and 2016 are missing data)."""
-    names = []
-    options = ""
-    for n in billionaire_data:
-        names = n["Date"]["Year"]
-        if (year not in years) and not (year == 1990 or year == 2016):
-            years.append(year)
-            options += Markup("<option value=\"" + str(year) + "\">" + str(year) + "</option>")
-    return options
+
+
+def get_name_options():
+#Returns the html code for a drop down menu.  Each option is a year for which there is complete data (1990 and 2016 are missing data)."""
+	with open('billionaires.json') as billionaires:
+		billionaire_data = json.load(billionaires) 
+	names = []
+	for n in billionaire_data:
+		if n["name"] not in names:
+			names.append(n["name"])
+	options = ""
+	for name in names:
+		options += Markup("<option value=\"" + name + "\">" + name + "</option>")
+	return options
+	
+	
+	
+def get_info(name, year):
+	rank = ""
+	company = ""
+	founded = ""
+	sector = ""
+	age = ""
+#Returns information on the billionaire selected
+	with open('billionaires.json') as billionaires:
+		billionaire_data = json.load(billionaires) 
+	for n in billionaire_data:
+		if n["name"] == name:
+			if n["year"] == int(year):	
+				rank = n["rank"]
+				company = n["company"]["name"]
+				founded = n["company"]["founded"]
+				sector = n["company"]["sector"]
+				age = n["demographics"]["age"]
+				rank = name + " is the number " + str(rank) + " ranked billionaire in the world during " + str(year) + ". He became a billionaire at age " + str(age) + " by founding the company " + company + " in " + str(founded) + ". This company was founded in the " + sector + " sector."
+				return rank
+	return " This person is not a billionaire in the year you selected"
 
 
 
-# @app.route('/')
-# def home():
-#     states = get_state_options()
-#     #print(states)
-#     return render_template('home.html', state_options=states)
-# 
-# @app.route('/showFact')
-# def render_fact():
-#     states = get_state_options()
-#     state = request.args.get('state')
-#     county = county_most_under_18(state)
-#     county2 = county_highest_female(state)
-#     county3 = county_Veterans(state)
-#     county4 = county_2014_Population(state)
-# #     highest =  county_2014_Population(state)
-# #     countys = total_countys()
-#     fact = "In " + state + ", the county with the highest percentage of under 18 year olds is " + county + "."
-#     fact2 = "In " + state + ", the county with the highest percentage of females is " + county2 + "."
-#     fact3 = "In " + state + ", the county with the highest number of veterans is " + county3 + "."
-#     fact4 = "In " + state + ", the county with the highest population is " + county4 + "."
-#     return render_template('home.html', state_options=states, funFact=fact, funFact2=fact2, funFact3=fact3, funFact4=fact4)
-#     
-#     
-# # def total_countys():
-# # 	with open('demographics.json') as demographics_data:
-# # 		counties = json.load(demographics_data)
-# # 	countys=0
-# # 	for c in counties:
-# # 		countys += 1
-# # 	return countys
-# 	
-# 	
-# def get_state_options():
-#     """Return the html code for the drop down menu.  Each option is a state abbreviation from the demographic data."""
-#     with open('demographics.json') as demographics_data:
-#         counties = json.load(demographics_data)
-#     states=[]
-#     for c in counties:
-#         if c["State"] not in states:
-#             states.append(c["State"])
-#     options=""
-#     for s in states:
-#         options += Markup("<option value=\"" + s + "\">" + s + "</option>") #Use Markup so <, >, " are not escaped lt, gt, etc.
-#     return options
-# 
-# def county_most_under_18(state):
-#     """Return the name of a county in the given state with the highest percent of under 18 year olds."""
-#     with open('demographics.json') as demographics_data:
-#         counties = json.load(demographics_data)
-#     highest=0
-#     county = ""
-#     for c in counties:
-#         if c["State"] == state:
-#             if c["Age"]["Percent Under 18 Years"] > highest:
-#                 highest = c["Age"]["Percent Under 18 Years"]
-#                 county = c["County"]
-#     return county
-#     
-# def county_highest_female(state):
-#     """Return the name of a county in the given state with the highest percent of under 18 year olds."""
-#     with open('demographics.json') as demographics_data:
-#         counties = json.load(demographics_data)
-#     highest=0
-#     county2 = ""
-#     for c in counties:
-#         if c["State"] == state:
-#             if c["Miscellaneous"]["Percent Female"] > highest:
-#                 highest = c["Miscellaneous"]["Percent Female"]
-#                 county2 = c["County"]
-#     return county2
-#     
-# def county_Veterans(state):
-#     """Return the name of a county in the given state with the highest percent of under 18 year olds."""
-#     with open('demographics.json') as demographics_data:
-#         counties = json.load(demographics_data)
-#     highest=0
-#     county3 = ""
-#     for c in counties:
-#         if c["State"] == state:
-#             if c["Miscellaneous"]["Veterans"] > highest:
-#                 highest = c["Miscellaneous"]["Veterans"]
-#                 county3 = c["County"]
-#     return county3
-#     
-# def county_2014_Population(state):
-#     """Return the name of a county in the given state with the highest percent of under 18 year olds."""
-#     with open('demographics.json') as demographics_data:
-#         counties = json.load(demographics_data)
-#     highest=0
-#     county4 = ""
-#     for c in counties:
-#         if c["State"] == state:
-#             if c["Population"]["2014 Population"] > highest:
-#                 highest = c["Population"]["2014 Population"]
-#                 county4 = c["County"]
-#     return county4
-#     return highest
-#     
-#     
-# 
-# def is_localhost():
-#     """ Determines if app is running on localhost or not
-#     Adapted from: https://stackoverflow.com/questions/17077863/how-to-see-if-a-flask-app-is-being-run-on-localhost
-#     """
-#     root_url = request.url_root
-#     developer_url = 'http://127.0.0.1:5000/'
-#     return root_url == developer_url
-# 
-# 
 if __name__ == '__main__':
-    app.run(debug=False) # change to False when running in production
+    app.run(debug=True) # change to False when running in production
