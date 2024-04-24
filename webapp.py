@@ -26,7 +26,7 @@ def render_nameData():
 		year = request.args['year']
 		name = request.args['name']
 		info = get_info(name, year)
-		return render_template('nameData.html', name_options=get_name_options(), year_options=get_year_options(), name=name, info=info) #I dont think this line is being run
+		return render_template('nameData.html', name_options=get_name_options(), year_options=get_year_options(), name=name, info=info) 
 	return render_template('nameData.html', name_options=get_name_options(), year_options=get_year_options())
 
 
@@ -38,22 +38,53 @@ def render_totalWorth():
 	return render_template('totalWorth.html', name_options=get_name_options())
     
     
+@app.route('/worthChart')
+def render_worthChart():
+	if "name" in request.args:
+		name = request.args['name']
+		name2 = request.args['name2']
+		name3 = request.args['name3']
+		name4 = request.args['name4']
+		name5 = request.args['name5']
+		
+		worth=total_worth_chart(name)
+		worth2=total_worth_chart(name2)
+		worth3=total_worth_chart(name3)
+		worth4=total_worth_chart(name4)
+		worth5=total_worth_chart(name5)
+		return render_template('worthChart.html', name_options=get_name_options(), name=name, name2=name2, name3=name3, name4=name4, name5=name5, worth=worth, worth2=worth2, worth3=worth3, worth4=worth4, worth5=worth5) 
+	return render_template('worthChart.html', name_options=get_name_options())
+
+
+    
+def total_worth_chart(name):
+    # Returns the total worth of a selected billionaire
+    with open('billionaires.json') as billionaires:
+        billionaire_data = json.load(billionaires)
+    initial_worth = None
+    worth = 0
+    for w in billionaire_data:
+    	if w["name"] == name:
+    		worth += w["wealth"]["worth in billions"]
+    return str(round(worth))
+
+    
 def total_worth(name):
-#Returns the total worth of a selected billionaire
-	with open('billionaires.json') as billionaires:
-		billionaire_data = json.load(billionaires) 
-	initial_worth = 0
-	worth = 0
-	worth_difference = 0
-	for w in billionaire_data:
-		if w["name"] == name:
-			initial_worth = w["wealth"]["worth in billions"]
-			worth += w["wealth"]["worth in billions"]
-		worth_difference = worth - initial_worth
-	return name + "'s total worth combining the years 1996, 2001, and 2014 is " + str(worth) + " billion dollars. In 1996 " + name + " was worth " + str(initial_worth) + " billion dollars. This means that " + name + " grew " + str(worth_difference) + " billion dollars."
+    # Returns the total worth of a selected billionaire
+    with open('billionaires.json') as billionaires:
+        billionaire_data = json.load(billionaires)
+    initial_worth = None
+    worth = 0
+    worth_difference = 0
+    for w in billionaire_data:
+        if w["name"] == name:
+            if initial_worth is None:
+                initial_worth = w["wealth"]["worth in billions"]
+            worth += w["wealth"]["worth in billions"]
+    worth_difference = worth - initial_worth
+    return name + "'s total worth combining the years 1996, 2001, and 2014 is " + str(round(worth)) + " billion dollars. In 1996 " + name + " was worth " + str(round(initial_worth)) + " billion dollars. This means that " + name + " grew " + str(round(worth_difference)) + " billion dollars."
 	
-	
-	
+
 	
 def get_year_options():
 #Returns the html code for a drop down menu.  Each option is a year for which there is complete data (1990 and 2016 are missing data)."""

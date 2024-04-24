@@ -18,5 +18,17 @@ body {
 }
 
 .info {
-	font-size: 110%;
+ 	font-family: verdana;
+	font-size: 210%;
+}
+
+.d-block {
+width: 100%;
+	object-fit: fill;
+
+}
+
+#demo{
+width: 25%;
+margin: auto;
 }
