@@ -1,0 +1,40 @@
+	{% extends "layout.html" %}
+
+	{% set active_page = "totalWorth" %}
+
+	{% block title %}Billionaires List{% endblock %}
+
+	{% block heading %}Billionaires List{% endblock %}
+
+	{% block body %}
+    
+<h2>Select a name</h2>
+<form action="/totalWorth"> 
+  <select name="name">
+    {{ name_options|safe }}
+  </select>
+  <br><br>
+  <input type="submit" value="Get Worth">
+</form>
+<div>
+<br><br>
+	<p class = "info"> {{ worth }} </p>
+</div>
+	
+      <!-- 
+  <form action="/showFact">
+          <select name="state"> <!~~ add onchange="this.form.submit()" to submit/update the form when an option is selected.  Usefull for then displaying county options. ~~>
+            {{ state_options }}
+          </select>
+          <br><br>
+          <input type="submit" value="Get a fun fact!">
+        </form>
+        <div id="funFact">
+            <p>{{ funFact }}</p>
+            <p>{{ funFact2 }}</p>
+            <p>{{ funFact3 }}</p>
+            <p>{{ funFact4 }}</p>
+        </div>
+ -->
+
+	{% endblock %}

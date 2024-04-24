@@ -1,0 +1,86 @@
+	{% extends "layout.html" %}
+
+	{% set active_page = "worthChart" %}
+
+	{% block title %}Billionaires List{% endblock %}
+
+	{% block heading %}Billionaires List{% endblock %}
+
+	{% block body %}
+    
+<h2>Select a name for each dropdown</h2>
+<form action="/worthChart">
+
+  <select name="name">
+    {{ name_options|safe }}
+  </select>
+<div class = "info">
+</div>
+
+ <select name="name2">
+    {{ name_options|safe }}
+  </select>
+<div class = "info">
+</div>
+
+ <select name="name3">
+   {{ name_options|safe }}
+  </select>
+<div class = "info">
+</div>
+
+ <select name="name4">
+    {{ name_options|safe }}
+  </select>
+<div class = "info">
+</div>
+
+ <select name="name5">
+    {{ name_options|safe }}
+  </select>
+  <br><br>
+  <input type="submit" value="Get Chart">
+    <br><br>
+    <br><br>
+    <br><br>
+  
+
+</form>
+
+<div class = "info">
+</div>
+
+
+	
+<script type="text/javascript">
+
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	theme: "dark2", // "light2", "dark1", "dark2"
+	animationEnabled: true, // change to true		
+	title:{
+		text: "Total Worth in Billions"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: "column",
+		dataPoints: [
+			{ label: "{{ name }}",  y: {{ worth }}  },
+			{ label: "{{ name2 }}", y: {{ worth2 }}  },
+			{ label: "{{ name3 }}", y: {{ worth3 }}  },
+			{ label: "{{ name4 }}", y: {{ worth4 }}  },
+			{ label: "{{ name5 }}", y: {{ worth5 }}  }
+		]
+	}
+	]
+});
+chart.render();
+
+}
+</script>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"> </script>
+
+	{% endblock %}
